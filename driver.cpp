@@ -9,7 +9,11 @@ using namespace PLLKIA010;
 
 int main(int argc, char *argv[])
 {
-    
-    ValueIteration module();
+    vector<string> states = {"s1", "s2", "s3", "s4", "s5", "s6"};
+    vector<string> actions = {"l", "r", "u", "d"};
+    unordered_map<string, int> reward_function = {{"s2s3",50},{"s6s3",100}};
+    float discount = 0.8;
+
+    ValueIteration module(states, actions, reward_function, discount);
     return 0;
 }
