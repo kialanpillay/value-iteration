@@ -11,7 +11,7 @@ using namespace PLLKIA010;
 ValueIteration::ValueIteration(void){};
 
 ValueIteration::ValueIteration(const std::vector<std::string> &s, const std::vector<std::string> &a,
-                               const std::unordered_map<std::string, int> &rf, const float &d) : states(s), actions(a), reward_function(rf), discount(d) {}
+                               const std::unordered_map<std::string, int> &rf, const float &d, const std::string &t) : states(s), actions(a), reward_function(rf), discount(d), terminal(t)  {}
 
 std::vector<int> stateMapping(std::string &s) //Helper Function - s -> (x,y)
 {
@@ -79,7 +79,7 @@ public:
     bool operator()(std::string &state)
     {
         std::vector<int> s_prime = stateMapping(state);
-        std::cout << state << " - " << s_prime[0] << " " << s_prime[1] << " ";
+        //std::cout << state << " - " << s_prime[0] << " " << s_prime[1] << " ";
 
         bool action = false;
         for (std::string &a : actions)
@@ -105,7 +105,7 @@ public:
                 break;
             }
         }
-        std::cout << action << std::endl;
+        //std::cout << action << std::endl;
         return action;
     }
     std::vector<std::string> actions;
@@ -118,11 +118,12 @@ void ValueIteration::compute()
     optimal_values.push_back(value_function);
 
     int k = 0;
-    while (k < 1)
+    do
     {
         k++;
+        //std::cout << k << std::endl;
         optimal_values.push_back(value_function);
-        for (int s = 0; s < 1; ++s)
+        for (int s = 0; s < int(states.size()); ++s)
         {
             std::vector<float> discounted_value(states.size()); //V(s') for all states
             std::vector<std::string> transition;                //Possible transitions from s -> s'
@@ -136,45 +137,58 @@ void ValueIteration::compute()
                 state_value.insert({states[r], discounted_value[r]}); //Populate map
             }
 
-            std::copy_if(states.begin(), states.end(), std::back_inserter(transition), Transition(actions, stateMapping(states[s])));
-            std::cout << transition.size();
-
-            for (std::string &t : transition)
+            if (states[s] != "s3")
             {
-                transition_state_value.push_back(state_value[t]);
-            }
 
-            for (std::string &t : transition)
-            {
-                auto it = reward_function.find(states[s] + t);
-                if (it != reward_function.end())
+                std::copy_if(states.begin(), states.end(), std::back_inserter(transition), Transition(actions, stateMapping(states[s])));
+
+                for (std::string &t : transition)
                 {
-                    reward.push_back(it->second);
+                    transition_state_value.push_back(state_value[t]);
                 }
-                else
+
+                for (std::string &t : transition)
                 {
-                    reward.push_back(0);
+                    auto it = reward_function.find(states[s] + t);
+                    if (it != reward_function.end())
+                    {
+                        reward.push_back(it->second);
+                    }
+                    else
+                    {
+                        reward.push_back(0);
+                    }
                 }
-            }
 
-            std::vector<float> bellman_optimality(transition.size()); //R + V(s') for all transitions
-            for (int i = 0; i < int(bellman_optimality.size()); ++i)
+                std::vector<float> bellman_optimality(transition.size()); //R + V(s') for all transitions
+                for (int i = 0; i < int(bellman_optimality.size()); ++i)
+                {
+                    bellman_optimality[i] = reward[i] + transition_state_value[i];
+                }
+
+                float max_value = *std::max_element(std::begin(bellman_optimality), std::end(bellman_optimality));
+                optimal_values[k][s] = max_value;
+            }
+            else
             {
-                bellman_optimality[i] = reward[i] + transition_state_value[i];
+                optimal_values[k][s] = 0;
             }
-
-            float max_value = *std::max_element(std::begin(bellman_optimality), std::end(bellman_optimality));
-            optimal_values[k][s] = max_value;
         }
-    }
+        for (int i = 0; i < int(states.size()); ++i)
+        {
+            std::cout << optimal_values[k][i] << " ";
+        }
+        std::cout << std::endl
+                  << std::endl;
+    } while (!convergence());
 }
 
 bool ValueIteration::convergence(void)
 {
-    int k = optimal_values.size();
+    int k = optimal_values.size() - 1;
     for (int s = 0; s < int(states.size()); ++s)
     {
-        if (optimal_values[k][s] - optimal_values[k][s] > 0.0001)
+        if (optimal_values[k][s] - optimal_values[k - 1][s] > 0.1)
         {
             return false;
         }

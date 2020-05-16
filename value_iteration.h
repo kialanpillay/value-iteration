@@ -11,10 +11,11 @@ namespace PLLKIA010
     public:
         ValueIteration(void);
         ValueIteration(const std::vector<std::string> &states, const std::vector<std::string> &actions,
-                       const std::unordered_map<std::string, int> &reward_function, const float &discount);
+                       const std::unordered_map<std::string, int> &reward_function, const float &discount, const std::string &terminal);
         void compute(void);
         void write(std::ostream &os);
         bool convergence(void);
+
     private:
         std::vector<std::string> states;
         std::vector<std::string> actions;
@@ -22,6 +23,7 @@ namespace PLLKIA010
         std::vector<std::vector<float>> optimal_values;
         std::vector<std::string> optimal_policy;
         float discount;
+        std::string terminal;
     };
     std::ostream &operator<<(std::ostream &os, const ValueIteration &v);
 } // namespace PLLKIA010
