@@ -171,14 +171,14 @@ void ValueIteration::compute()
                 {
                     if (std::find(transition.begin(), transition.end(), "s3") != transition.end())
                     {
-                        optimal_policy.push_back(action(states[s], "s3"));
+                        optimal_policy.push_back(getAction(states[s], "s3"));
                         terminated = true;
                     }
                     else
                     {
                         auto it = std::find(bellman_optimality.begin(), bellman_optimality.end(), max_value);
                         int index = std::distance(bellman_optimality.begin(), it);
-                        optimal_policy.push_back(action(states[s], transition[index]));
+                        optimal_policy.push_back(getAction(states[s], transition[index]));
                     }
                 }
             }
@@ -193,25 +193,25 @@ void ValueIteration::compute()
         }
         std::cout << std::endl
                   << std::endl;
-    } while (!convergence());
+    } while (!testConvergence());
     for (int i = 0; i < int(optimal_policy.size()); ++i)
     {
         std::cout << optimal_policy[i] << " ";
     }
     std::cout << std::endl;
-    
+
     std::string s = states[0];
     std::cout << s << " ";
     for (int i = 0; i < int(optimal_policy.size()); ++i)
     {
-        s = states[state(s,optimal_policy[i])];
+        s = states[stateIndex(s,optimal_policy[i])];
         std::cout << s << " ";
         
     }
 }
 
 
-int ValueIteration::state(const std::string &s, const std::string &action) const
+int ValueIteration::stateIndex(const std::string &s, const std::string &action) const
 {
     std::vector<int> c = stateMapping(s);
     if (action == "left")
@@ -236,7 +236,7 @@ int ValueIteration::state(const std::string &s, const std::string &action) const
     }
 }
 
-std::string ValueIteration::action(const std::string &s, const std::string &s_prime) const
+std::string ValueIteration::getAction(const std::string &s, const std::string &s_prime) const
 {
     std::vector<int> c = stateMapping(s);
     std::vector<int> c_prime = stateMapping(s_prime);
@@ -258,7 +258,7 @@ std::string ValueIteration::action(const std::string &s, const std::string &s_pr
     }
 }
 
-bool ValueIteration::convergence(void) const
+bool ValueIteration::testConvergence(void) const
 {
     int k = optimal_values.size() - 1;
     for (int s = 0; s < int(states.size()); ++s)

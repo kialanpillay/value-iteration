@@ -14,9 +14,9 @@ namespace PLLKIA010
                        const std::unordered_map<std::string, int> &reward_function, const float &discount, const std::string &terminal);
         void compute(void);
         void write(std::ostream &os);
-        bool convergence(void) const;
-        std::string action(const std::string &s, const std::string &s_prime) const;
-        int state(const std::string &s, const std::string &action) const;
+        bool testConvergence(void) const;
+        int stateIndex(const std::string &s, const std::string &action) const;
+        std::string getAction(const std::string &s, const std::string &s_prime) const;
 
     private:
         std::vector<std::string> states;
