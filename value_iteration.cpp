@@ -125,35 +125,41 @@ void ValueIteration::compute()
         for (int s = 0; s < 1; ++s)
         {
             std::vector<float> discounted_value(states.size()); //V(s') for all states
-            std::vector<std::string> transition;                 //Possible transitions from s -> s'
-            std::vector<int> reward;                 //Immediate reward for s -> s'
+            std::vector<std::string> transition;                //Possible transitions from s -> s'
+            std::vector<int> reward;                            //Immediate reward for s -> s'
             std::vector<float> transition_state_value;          //V(s') for all possible transitions
             std::transform(optimal_values[k - 1].begin(), optimal_values[k - 1].end(), discounted_value.begin(), [this](float f) { return discount * f; });
 
             std::unordered_map<std::string, float> state_value; //Map from s to V(s)
-            for(int r = 0; r < int(discounted_value.size()); ++r){
-                state_value.insert({states[r],discounted_value[r]}); //Populate map
+            for (int r = 0; r < int(discounted_value.size()); ++r)
+            {
+                state_value.insert({states[r], discounted_value[r]}); //Populate map
             }
 
             std::copy_if(states.begin(), states.end(), std::back_inserter(transition), Transition(actions, stateMapping(states[s])));
             std::cout << transition.size();
 
-            for (std::string & t: transition){
+            for (std::string &t : transition)
+            {
                 transition_state_value.push_back(state_value[t]);
             }
 
-            for (std::string & t: transition){
-                auto it = reward_function.find(states[s]+t);
-                if(it != reward_function.end()){
-                    reward.push_back(it -> second);
+            for (std::string &t : transition)
+            {
+                auto it = reward_function.find(states[s] + t);
+                if (it != reward_function.end())
+                {
+                    reward.push_back(it->second);
                 }
-                else{
+                else
+                {
                     reward.push_back(0);
                 }
             }
 
             std::vector<float> bellman_optimality(transition.size()); //R + V(s') for all transitions
-            for(int i = 0; i < int(bellman_optimality.size()); ++i){
+            for (int i = 0; i < int(bellman_optimality.size()); ++i)
+            {
                 bellman_optimality[i] = reward[i] + transition_state_value[i];
             }
 
