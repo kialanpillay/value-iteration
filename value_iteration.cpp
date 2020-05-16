@@ -110,11 +110,11 @@ public:
     std::vector<int> coordinates;
 };
 
-void ValueIteration::compute()
+void ValueIteration::runAlgorithm()
 {
     std::vector<float> value_function(states.size());
     optimal_values.push_back(value_function);
-    
+
     int k = 0;
     do
     {
@@ -187,31 +187,10 @@ void ValueIteration::compute()
                 optimal_values[k][s] = 0;
             }
         }
-        for (int i = 0; i < int(states.size()); ++i)
-        {
-            std::cout << optimal_values[k][i] << " ";
-        }
-        std::cout << std::endl
-                  << std::endl;
     } while (!testConvergence());
-    for (int i = 0; i < int(optimal_policy.size()); ++i)
-    {
-        std::cout << optimal_policy[i] << " ";
-    }
-    std::cout << std::endl;
-
-    std::string s = states[0];
-    std::cout << s << " ";
-    for (int i = 0; i < int(optimal_policy.size()); ++i)
-    {
-        s = states[stateIndex(s,optimal_policy[i])];
-        std::cout << s << " ";
-        
-    }
 }
 
-
-int ValueIteration::stateIndex(const std::string &s, const std::string &action) const
+int ValueIteration::getStateIndex(const std::string &s, const std::string &action) const
 {
     std::vector<int> c = stateMapping(s);
     if (action == "left")
@@ -271,11 +250,36 @@ bool ValueIteration::testConvergence(void) const
     return true;
 }
 
-void ValueIteration::write(std::ostream &os)
+void ValueIteration::writeResults(std::ostream &os)
 {
+    os << "Optimal Values:  \n";
+    for (int i = 0; i < int(states.size()); ++i)
+    {
+        std::cout << states[i] << " - " << optimal_values[optimal_values.size()-1][i] << "\n";
+    }
+    std::cout << std::endl;
+
+    os << "Optimal Policy (Actions): ";
+    for (int i = 0; i < int(optimal_policy.size()); ++i)
+    {
+        os << optimal_policy[i] << " ";
+    }
+    os << std::endl;
+
+    os << "Optimal Policy (States): ";
+    std::string state = states[0];
+    os << state << " ";
+    for (int i = 0; i < int(optimal_policy.size()); ++i)
+    {
+        state = states[getStateIndex(state, optimal_policy[i])];
+        os << state << " ";
+    }
 }
 
 std::ostream &PLLKIA010::operator<<(std::ostream &os, const ValueIteration &v)
 {
+    ValueIteration value_iteration = v;
+    value_iteration.runAlgorithm();
+    value_iteration.writeResults(os);
     return os;
 }

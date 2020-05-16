@@ -16,6 +16,6 @@ int main(int argc, char *argv[])
     string terminal = "s3";
 
     ValueIteration module(states, actions, reward_function, discount, terminal);
-    module.compute();
+    cout << module;
     return 0;
 }
