@@ -17,5 +17,5 @@ This file is the actual implementation of the methods declared in the ```value_i
 
 ## driver.cpp
 
-This file contains the main method, and provides an entry point into the program. It imports the ```clusterer.h``` file in order to provide the PCA functionality. The main method has an ```PCA``` object, and uses the overloaded operator to write the results to the supplied ```ostream```.
+This file contains the main method, and provides an entry point into the program. It imports the ```value_iteration.h``` file in order to provide the requisite reinforcement learning functionality. The main method has a ```ValueIteration``` object, and uses the overloaded operator to write the results to the supplied ```ostream```.
 
