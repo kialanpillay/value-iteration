@@ -79,7 +79,6 @@ public:
     bool operator()(std::string &state)
     {
         std::vector<int> s_prime = stateMapping(state);
-        //std::cout << state << " - " << s_prime[0] << " " << s_prime[1] << " ";
 
         bool action = false;
         for (std::string &a : actions)
@@ -105,7 +104,6 @@ public:
                 break;
             }
         }
-        //std::cout << action << std::endl;
         return action;
     }
     std::vector<std::string> actions;
@@ -137,7 +135,7 @@ void ValueIteration::compute()
                 state_value.insert({states[r], discounted_value[r]}); //Populate map
             }
 
-            if (states[s] != "s3")
+            if (states[s] != "s3") //If not Terminal state
             {
 
                 std::copy_if(states.begin(), states.end(), std::back_inserter(transition), Transition(actions, stateMapping(states[s])));
@@ -166,7 +164,7 @@ void ValueIteration::compute()
                     bellman_optimality[i] = reward[i] + transition_state_value[i];
                 }
 
-                float max_value = *std::max_element(std::begin(bellman_optimality), std::end(bellman_optimality));
+                float max_value = *std::max_element(std::begin(bellman_optimality), std::end(bellman_optimality)); //Maximal value
                 optimal_values[k][s] = max_value;
             }
             else
