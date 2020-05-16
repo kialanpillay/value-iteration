@@ -8,7 +8,7 @@ driver.o: driver.cpp
 	$(CC) $(CCFLAGS) -c driver.cpp	
 
 value_iteration.o: value_iteration.cpp value_iteration.h
-	$(CC) $(CCFLAGS) -c pca.cpp
+	$(CC) $(CCFLAGS) -c value_iteration.cpp
 
 clean:
 	@rm -f *.o && rm -f driver

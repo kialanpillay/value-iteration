@@ -1,11 +1,17 @@
 #include "value_iteration.h"
 #include <iostream>
 #include <fstream>
+#include <unordered_map>
+#include <vector>
 #include <string>
 
 using namespace PLLKIA010;
 
-ValueIteration::ValueIteration(){}
+ValueIteration::ValueIteration(void){};
+
+ValueIteration::ValueIteration(const std::vector<std::string> & s, const std::vector<std::string> & a,
+                                const std::unordered_map<std::string,int> & rf): 
+                                states(s), actions(a), reward_function(rf){}
 
 std::ostream& PLLKIA010::operator<<(std::ostream& os, const ValueIteration& v){ 
     return os;
