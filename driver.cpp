@@ -15,5 +15,6 @@ int main(int argc, char *argv[])
     float discount = 0.8;
 
     ValueIteration module(states, actions, reward_function, discount);
+    module.compute();
     return 0;
 }
