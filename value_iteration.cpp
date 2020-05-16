@@ -11,9 +11,9 @@ using namespace PLLKIA010;
 ValueIteration::ValueIteration(void){};
 
 ValueIteration::ValueIteration(const std::vector<std::string> &s, const std::vector<std::string> &a,
-                               const std::unordered_map<std::string, int> &rf, const float &d, const std::string &t) : states(s), actions(a), reward_function(rf), discount(d), terminal(t)  {}
+                               const std::unordered_map<std::string, int> &rf, const float &d, const std::string &t) : states(s), actions(a), reward_function(rf), discount(d), terminal(t) {}
 
-std::vector<int> stateMapping(std::string &s) //Helper Function - s -> (x,y)
+std::vector<int> stateMapping(const std::string &s) //Helper Function - s -> (x,y)
 {
     if (s == "s1")
     {
@@ -42,7 +42,7 @@ std::vector<int> stateMapping(std::string &s) //Helper Function - s -> (x,y)
     return {0, 0};
 }
 
-int coordinateMapping(std::vector<int> c) //Helper Function - (x,y) -> s_i (index)
+int coordinateMapping(const std::vector<int> c) //Helper Function - (x,y) -> s_i (index)
 {
     if (c[0] == 0 && c[1] == 1)
     {
@@ -78,27 +78,27 @@ public:
 
     bool operator()(std::string &state)
     {
-        std::vector<int> s_prime = stateMapping(state);
+        std::vector<int> c_prime = stateMapping(state); //Coordinates of successor state
 
         bool action = false;
         for (std::string &a : actions)
         {
-            if (a == "l" && (coordinates[0] - 1) == s_prime[0] && (coordinates[1]) == s_prime[1])
+            if (a == "l" && (coordinates[0] - 1) == c_prime[0] && (coordinates[1]) == c_prime[1])
             {
                 action = true;
                 break;
             }
-            if (a == "r" && (coordinates[0] + 1) == s_prime[0] && (coordinates[1]) == s_prime[1])
+            if (a == "r" && (coordinates[0] + 1) == c_prime[0] && (coordinates[1]) == c_prime[1])
             {
                 action = true;
                 break;
             }
-            if (a == "u" && (coordinates[1] + 1) == s_prime[1] && (coordinates[0]) == s_prime[0])
+            if (a == "u" && (coordinates[1] + 1) == c_prime[1] && (coordinates[0]) == c_prime[0])
             {
                 action = true;
                 break;
             }
-            if (a == "d" && (coordinates[1] - 1) == s_prime[1] && (coordinates[0]) == s_prime[0])
+            if (a == "d" && (coordinates[1] - 1) == c_prime[1] && (coordinates[0]) == c_prime[0])
             {
                 action = true;
                 break;
@@ -114,12 +114,13 @@ void ValueIteration::compute()
 {
     std::vector<float> value_function(states.size());
     optimal_values.push_back(value_function);
-
+    
     int k = 0;
     do
     {
         k++;
-        //std::cout << k << std::endl;
+        optimal_policy.clear();
+        bool terminated = false;
         optimal_values.push_back(value_function);
         for (int s = 0; s < int(states.size()); ++s)
         {
@@ -164,8 +165,22 @@ void ValueIteration::compute()
                     bellman_optimality[i] = reward[i] + transition_state_value[i];
                 }
 
-                float max_value = *std::max_element(std::begin(bellman_optimality), std::end(bellman_optimality)); //Maximal value
+                float max_value = *std::max_element(bellman_optimality.begin(), bellman_optimality.end()); //Maximal value
                 optimal_values[k][s] = max_value;
+                if (!terminated)
+                {
+                    if (std::find(transition.begin(), transition.end(), "s3") != transition.end())
+                    {
+                        optimal_policy.push_back(action(states[s], "s3"));
+                        terminated = true;
+                    }
+                    else
+                    {
+                        auto it = std::find(bellman_optimality.begin(), bellman_optimality.end(), max_value);
+                        int index = std::distance(bellman_optimality.begin(), it);
+                        optimal_policy.push_back(action(states[s], transition[index]));
+                    }
+                }
             }
             else
             {
@@ -179,14 +194,76 @@ void ValueIteration::compute()
         std::cout << std::endl
                   << std::endl;
     } while (!convergence());
+    for (int i = 0; i < int(optimal_policy.size()); ++i)
+    {
+        std::cout << optimal_policy[i] << " ";
+    }
+    std::cout << std::endl;
+    
+    std::string s = states[0];
+    std::cout << s << " ";
+    for (int i = 0; i < int(optimal_policy.size()); ++i)
+    {
+        s = states[state(s,optimal_policy[i])];
+        std::cout << s << " ";
+        
+    }
 }
 
-bool ValueIteration::convergence(void)
+
+int ValueIteration::state(const std::string &s, const std::string &action) const
+{
+    std::vector<int> c = stateMapping(s);
+    if (action == "left")
+    {
+        c[0] -= 1;
+        return coordinateMapping(c);
+    }
+    if (action == "right")
+    {
+        c[0] += 1;
+        return coordinateMapping(c);
+    }
+    if (action == "up")
+    {
+        c[1] += 1;
+        return coordinateMapping(c);
+    }
+    else
+    {
+        c[1] -= 1;
+        return coordinateMapping(c);
+    }
+}
+
+std::string ValueIteration::action(const std::string &s, const std::string &s_prime) const
+{
+    std::vector<int> c = stateMapping(s);
+    std::vector<int> c_prime = stateMapping(s_prime);
+    if ((c[0] - 1) == c_prime[0] && (c[1]) == c_prime[1])
+    {
+        return "left";
+    }
+    if ((c[0] + 1) == c_prime[0] && (c[1]) == c_prime[1])
+    {
+        return "right";
+    }
+    if ((c[1] + 1) == c_prime[1] && (c[0]) == c_prime[0])
+    {
+        return "up";
+    }
+    else
+    {
+        return "down";
+    }
+}
+
+bool ValueIteration::convergence(void) const
 {
     int k = optimal_values.size() - 1;
     for (int s = 0; s < int(states.size()); ++s)
     {
-        if (optimal_values[k][s] - optimal_values[k - 1][s] > 0.1)
+        if (optimal_values[k][s] - optimal_values[k - 1][s] > 0.00001)
         {
             return false;
         }
