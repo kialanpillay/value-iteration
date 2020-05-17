@@ -13,7 +13,7 @@ ValueIteration::ValueIteration(void){};
 ValueIteration::ValueIteration(const std::vector<std::string> &s, const std::vector<std::string> &a,
                                const std::unordered_map<std::string, int> &rf, const float &d, const std::string &st, const std::string &t) : states(s), actions(a), reward_function(rf), discount(d), start(st), terminal(t) {}
 
-std::vector<int> stateMapping(const std::string &s) //Helper Function - s -> (x,y)
+std::vector<int> mapState(const std::string &s) //Helper Function - s -> (x,y)
 {
     if (s == "s1")
     {
@@ -42,7 +42,7 @@ std::vector<int> stateMapping(const std::string &s) //Helper Function - s -> (x,
     return {0, 0};
 }
 
-int coordinateMapping(const std::vector<int> c) //Helper Function - (x,y) -> s_i (index)
+int mapCoordinates(const std::vector<int> c) //Helper Function - (x,y) -> s_i (index)
 {
     if (c[0] == 0 && c[1] == 1)
     {
@@ -78,7 +78,7 @@ public:
 
     bool operator()(std::string &state)
     {
-        std::vector<int> c_prime = stateMapping(state); //Coordinates of s'
+        std::vector<int> c_prime = mapState(state); //Coordinates of s'
 
         bool action = false;
         for (std::string &a : actions)
@@ -138,15 +138,12 @@ void ValueIteration::runAlgorithm()
             if (states[s] != terminal)
             {
 
-                std::copy_if(states.begin(), states.end(), std::back_inserter(transition), Transition(actions, stateMapping(states[s])));
+                std::copy_if(states.begin(), states.end(), std::back_inserter(transition), Transition(actions, mapState(states[s])));
 
                 for (std::string &t : transition)
                 {
                     transition_state_value.push_back(state_value[t]);
-                }
 
-                for (std::string &t : transition)
-                {
                     auto it = reward_function.find(states[s] + t);
                     if (it != reward_function.end())
                     {
@@ -157,7 +154,6 @@ void ValueIteration::runAlgorithm()
                         reward.push_back(0);
                     }
                 }
-
                 std::vector<float> bellman_optimality(transition.size()); //R + V(s') for all transitions
                 for (int i = 0; i < int(bellman_optimality.size()); ++i)
                 {
@@ -178,33 +174,33 @@ void ValueIteration::runAlgorithm()
 
 int ValueIteration::getStateIndex(const std::string &s, const std::string &action) const
 {
-    std::vector<int> c = stateMapping(s);
+    std::vector<int> c = mapState(s);
     if (action == actions[0])
     {
         c[0] -= 1;
-        return coordinateMapping(c);
+        return mapCoordinates(c);
     }
     if (action == actions[1])
     {
         c[0] += 1;
-        return coordinateMapping(c);
+        return mapCoordinates(c);
     }
     if (action == actions[2])
     {
         c[1] += 1;
-        return coordinateMapping(c);
+        return mapCoordinates(c);
     }
     else
     {
         c[1] -= 1;
-        return coordinateMapping(c);
+        return mapCoordinates(c);
     }
 }
 
 std::string ValueIteration::getAction(const std::string &s, const std::string &s_prime) const
 {
-    std::vector<int> c = stateMapping(s);
-    std::vector<int> c_prime = stateMapping(s_prime);
+    std::vector<int> c = mapState(s);
+    std::vector<int> c_prime = mapState(s_prime);
     if ((c[0] - 1) == c_prime[0] && (c[1]) == c_prime[1])
     {
         return actions[0];
@@ -255,7 +251,7 @@ void ValueIteration::computePolicy()
     {
         transition.clear();
         values.clear();
-        std::copy_if(states.begin(), states.end(), std::back_inserter(transition), Transition(actions, stateMapping(state)));
+        std::copy_if(states.begin(), states.end(), std::back_inserter(transition), Transition(actions, mapState(state)));
         for (std::string &t : transition)
         {
             values.push_back(state_optimal_value[t]);
