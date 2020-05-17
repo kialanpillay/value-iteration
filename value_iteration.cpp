@@ -167,6 +167,7 @@ void ValueIteration::runAlgorithm()
 
                 float max_value = *std::max_element(bellman_optimality.begin(), bellman_optimality.end()); //Maximal value
                 optimal_values[k][s] = max_value;
+                /*
                 if (!terminated)
                 {
                     if (std::find(transition.begin(), transition.end(), "s3") != transition.end())
@@ -180,7 +181,7 @@ void ValueIteration::runAlgorithm()
                         int index = std::distance(bellman_optimality.begin(), it);
                         optimal_policy.push_back(getAction(states[s], transition[index]));
                     }
-                }
+                }*/
             }
             else
             {
@@ -250,12 +251,53 @@ bool ValueIteration::testConvergence(void) const
     return true;
 }
 
-void ValueIteration::writeResults(std::ostream &os)
+void ValueIteration::computePolicy(const std::string &start)
 {
+    std::string state = start;
+    int p = 0;
+    bool terminated = false;
+    std::vector<std::string> transition;
+    std::vector<float> values;
+
+    std::unordered_map<std::string, float> state_optimal_value;
+    for (int o = 0; o < int(optimal_values.size()); ++o)
+    {
+        state_optimal_value.insert({states[o], optimal_values[optimal_values.size() - 1][o]});
+    }
+
+    while (!terminated)
+    {
+        transition.clear();
+        values.clear();
+        std::copy_if(states.begin(), states.end(), std::back_inserter(transition), Transition(actions, stateMapping(state)));
+        for (std::string &t : transition)
+        {
+            values.push_back(state_optimal_value[t]);
+        }
+
+        if (std::find(transition.begin(), transition.end(), "s3") != transition.end())
+        {
+            optimal_policy.push_back(getAction(state, "s3"));
+            terminated = true;
+        }
+        else
+        {
+            auto it = std::find(values.begin(), values.end(), *std::max_element(values.begin(), values.end()));
+            int index = std::distance(values.begin(), it);
+            optimal_policy.push_back(getAction(state, transition[index]));
+        }
+        state = states[getStateIndex(state, optimal_policy[p])];
+        p++;
+    }
+}
+
+void ValueIteration::writeResults(std::ostream &os, const std::string &start)
+{
+
     os << "Optimal Values:  \n";
     for (int i = 0; i < int(states.size()); ++i)
     {
-        std::cout << states[i] << " - " << optimal_values[optimal_values.size()-1][i] << "\n";
+        std::cout << states[i] << " - " << optimal_values[optimal_values.size() - 1][i] << "\n";
     }
     std::cout << std::endl;
 
@@ -266,8 +308,8 @@ void ValueIteration::writeResults(std::ostream &os)
     }
     os << std::endl;
 
+    std::string state = start;
     os << "Optimal Policy (States): ";
-    std::string state = states[0];
     os << state << " ";
     for (int i = 0; i < int(optimal_policy.size()); ++i)
     {
@@ -280,6 +322,7 @@ std::ostream &PLLKIA010::operator<<(std::ostream &os, const ValueIteration &v)
 {
     ValueIteration value_iteration = v;
     value_iteration.runAlgorithm();
-    value_iteration.writeResults(os);
+    value_iteration.computePolicy("s1");
+    value_iteration.writeResults(os, "s1");
     return os;
 }

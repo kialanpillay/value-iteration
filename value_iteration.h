@@ -13,7 +13,8 @@ namespace PLLKIA010
         ValueIteration(const std::vector<std::string> &states, const std::vector<std::string> &actions,
                        const std::unordered_map<std::string, int> &reward_function, const float &discount, const std::string &terminal);
         void runAlgorithm(void);
-        void writeResults(std::ostream &os);
+        void computePolicy(const std::string &start);
+        void writeResults(std::ostream &os, const std::string &start);
         bool testConvergence(void) const;
         int getStateIndex(const std::string &s, const std::string &action) const;
         std::string getAction(const std::string &s, const std::string &s_prime) const;
