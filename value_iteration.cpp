@@ -182,12 +182,12 @@ int ValueIteration::getStateIndex(const std::string &s, const std::string &actio
         c[0] -= 1;
         return coordinateMapping(c);
     }
-    if (action == actions[2])
+    if (action == actions[1])
     {
         c[0] += 1;
         return coordinateMapping(c);
     }
-    if (action == actions[3])
+    if (action == actions[2])
     {
         c[1] += 1;
         return coordinateMapping(c);
