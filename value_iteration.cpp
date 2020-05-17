@@ -205,19 +205,19 @@ std::string ValueIteration::getAction(const std::string &s, const std::string &s
     std::vector<int> c_prime = stateMapping(s_prime);
     if ((c[0] - 1) == c_prime[0] && (c[1]) == c_prime[1])
     {
-        return actions[0];
+        return "left";
     }
     if ((c[0] + 1) == c_prime[0] && (c[1]) == c_prime[1])
     {
-        return actions[1];
+        return "right";
     }
     if ((c[1] + 1) == c_prime[1] && (c[0]) == c_prime[0])
     {
-        return actions[2];
+        return "up";
     }
     else
     {
-        return actions[3];
+        return "down";
     }
 }
 
