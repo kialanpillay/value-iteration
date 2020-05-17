@@ -338,6 +338,9 @@ void ValueIteration::writeResults(std::ostream &os)
         }
         os << std::endl;
     }
+    else{
+        os << "Optimal Policy Change Guaranteed";
+    }
 }
 
 std::ostream &PLLKIA010::operator<<(std::ostream &os, const ValueIteration &v)
