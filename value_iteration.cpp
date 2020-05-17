@@ -119,8 +119,6 @@ void ValueIteration::runAlgorithm()
     do
     {
         k++;
-        optimal_policy.clear();
-        bool terminated = false;
         optimal_values.push_back(value_function);
         for (int s = 0; s < int(states.size()); ++s)
         {
@@ -167,21 +165,6 @@ void ValueIteration::runAlgorithm()
 
                 float max_value = *std::max_element(bellman_optimality.begin(), bellman_optimality.end()); //Maximal value
                 optimal_values[k][s] = max_value;
-                /*
-                if (!terminated)
-                {
-                    if (std::find(transition.begin(), transition.end(), "s3") != transition.end())
-                    {
-                        optimal_policy.push_back(getAction(states[s], "s3"));
-                        terminated = true;
-                    }
-                    else
-                    {
-                        auto it = std::find(bellman_optimality.begin(), bellman_optimality.end(), max_value);
-                        int index = std::distance(bellman_optimality.begin(), it);
-                        optimal_policy.push_back(getAction(states[s], transition[index]));
-                    }
-                }*/
             }
             else
             {
