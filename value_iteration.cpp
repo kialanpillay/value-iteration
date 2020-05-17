@@ -112,6 +112,7 @@ public:
 
 void ValueIteration::runAlgorithm()
 {
+    optimal_values.clear();
     std::vector<float> value_function(states.size());
     optimal_values.push_back(value_function);
 
@@ -235,8 +236,9 @@ bool ValueIteration::testConvergence(void) const
     return true;
 }
 
-void ValueIteration::computePolicy(const std::string &start)
+void ValueIteration::computePolicy()
 {
+    optimal_policy.clear();
     std::string state = start;
     int p = 0;
     bool terminated = false;
@@ -275,11 +277,12 @@ void ValueIteration::computePolicy(const std::string &start)
     }
 }
 
-void ValueIteration::writeResults(std::ostream &os, const std::string &start)
+void ValueIteration::writeResults(std::ostream &os)
 {
     os << "Question 1" << std::endl;
     os << "----------" << std::endl;
-    os << "Iterations:  " << iterations << std::endl <<  std::endl;
+    os << "Iterations:  " << iterations << std::endl
+       << std::endl;
 
     os << "Optimal Values:  \n";
     for (int i = 0; i < int(states.size()); ++i)
@@ -295,6 +298,7 @@ void ValueIteration::writeResults(std::ostream &os, const std::string &start)
     {
         os << optimal_policy[i] << " ";
     }
+    std::vector<std::string> cache = optimal_policy;
     os << std::endl;
 
     std::string state = start;
@@ -305,15 +309,47 @@ void ValueIteration::writeResults(std::ostream &os, const std::string &start)
         state = states[getStateIndex(state, optimal_policy[i])];
         os << state << " ";
     }
+    os << std::endl << std::endl;
+
+    os << "Question 3" << std::endl;
+    os << "----------" << std::endl;
+
+    reward_function = {{"s2s3", 100}, {"s6s3", 100}};
+    runAlgorithm();
+    computePolicy();
+
+    bool policy_change = false;
+    for (int i = 0; i < int(optimal_policy.size()); ++i)
+    {
+        if (cache[i] != optimal_policy[i])
+        {
+            policy_change = true;
+        }
+    }
+
+    if (!policy_change)
+    {
+
+        os << "Reward Function Change: (1,1) -> (1,2); R = 100  \n";
+        os << "Updated Optimal Values:  \n";
+        for (int i = 0; i < int(states.size()); ++i)
+        {
+            os << states[i] << " - " << optimal_values[optimal_values.size() - 1][i] << "\n";
+        }
+        os << std::endl;
+    }
 }
 
 std::ostream &PLLKIA010::operator<<(std::ostream &os, const ValueIteration &v)
-{   
-    os << "ML Assignment 6: Value Iteration" << std::endl << "================================" << std::endl;
-    os << "Kialan Pillay: PLLKIA010" << std::endl << "================================" << std::endl << std::endl;
+{
+    os << "ML Assignment 6: Value Iteration" << std::endl
+       << "================================" << std::endl;
+    os << "Kialan Pillay: PLLKIA010" << std::endl
+       << "================================" << std::endl
+       << std::endl;
     ValueIteration value_iteration = v;
     value_iteration.runAlgorithm();
-    value_iteration.computePolicy(value_iteration.start);
-    value_iteration.writeResults(os, value_iteration.start);
+    value_iteration.computePolicy();
+    value_iteration.writeResults(os);
     return os;
 }
