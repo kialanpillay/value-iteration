@@ -284,9 +284,9 @@ void ValueIteration::writeResults(std::ostream &os, const std::string &start)
     os << "Optimal Values:  \n";
     for (int i = 0; i < int(states.size()); ++i)
     {
-        std::cout << states[i] << " - " << optimal_values[optimal_values.size() - 1][i] << "\n";
+        os << states[i] << " - " << optimal_values[optimal_values.size() - 1][i] << "\n";
     }
-    std::cout << std::endl;
+    os << std::endl;
 
     os << "Question 2" << std::endl;
     os << "----------" << std::endl;
