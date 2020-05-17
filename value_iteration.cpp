@@ -83,22 +83,22 @@ public:
         bool action = false;
         for (std::string &a : actions)
         {
-            if (a == "l" && (coordinates[0] - 1) == c_prime[0] && (coordinates[1]) == c_prime[1])
+            if (a == "left" && (coordinates[0] - 1) == c_prime[0] && (coordinates[1]) == c_prime[1])
             {
                 action = true;
                 break;
             }
-            if (a == "r" && (coordinates[0] + 1) == c_prime[0] && (coordinates[1]) == c_prime[1])
+            if (a == "right" && (coordinates[0] + 1) == c_prime[0] && (coordinates[1]) == c_prime[1])
             {
                 action = true;
                 break;
             }
-            if (a == "u" && (coordinates[1] + 1) == c_prime[1] && (coordinates[0]) == c_prime[0])
+            if (a == "up" && (coordinates[1] + 1) == c_prime[1] && (coordinates[0]) == c_prime[0])
             {
                 action = true;
                 break;
             }
-            if (a == "d" && (coordinates[1] - 1) == c_prime[1] && (coordinates[0]) == c_prime[0])
+            if (a == "down" && (coordinates[1] - 1) == c_prime[1] && (coordinates[0]) == c_prime[0])
             {
                 action = true;
                 break;
@@ -205,19 +205,19 @@ std::string ValueIteration::getAction(const std::string &s, const std::string &s
     std::vector<int> c_prime = stateMapping(s_prime);
     if ((c[0] - 1) == c_prime[0] && (c[1]) == c_prime[1])
     {
-        return "left";
+        return actions[0];
     }
     if ((c[0] + 1) == c_prime[0] && (c[1]) == c_prime[1])
     {
-        return "right";
+        return actions[1];
     }
     if ((c[1] + 1) == c_prime[1] && (c[0]) == c_prime[0])
     {
-        return "up";
+        return actions[2];
     }
     else
     {
-        return "down";
+        return actions[3];
     }
 }
 
