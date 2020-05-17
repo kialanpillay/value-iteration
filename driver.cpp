@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
     vector<string> actions = {"l", "r", "u", "d"};
     unordered_map<string, int> reward_function = {{"s2s3",50},{"s6s3",100}};
     float discount = 0.8;
-    string start = "s1";
+    string start = "s4";
     string terminal = "s3";
 
     ValueIteration module(states, actions, reward_function, discount, start, terminal);

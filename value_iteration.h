@@ -18,6 +18,7 @@ namespace PLLKIA010
         bool testConvergence(void) const;
         int getStateIndex(const std::string &s, const std::string &action) const;
         std::string getAction(const std::string &s, const std::string &s_prime) const;
+        friend std::ostream &operator<<(std::ostream &os, const ValueIteration &v);
 
     private:
         std::vector<std::string> states;

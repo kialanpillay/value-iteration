@@ -78,7 +78,7 @@ public:
 
     bool operator()(std::string &state)
     {
-        std::vector<int> c_prime = stateMapping(state); //Coordinates of successor state
+        std::vector<int> c_prime = stateMapping(state); //Coordinates of s'
 
         bool action = false;
         for (std::string &a : actions)
@@ -131,10 +131,10 @@ void ValueIteration::runAlgorithm()
             std::unordered_map<std::string, float> state_value; //Map from s to V(s)
             for (int r = 0; r < int(discounted_value.size()); ++r)
             {
-                state_value.insert({states[r], discounted_value[r]}); //Populate map
+                state_value.insert({states[r], discounted_value[r]});
             }
 
-            if (states[s] != "s3") //If not Terminal state
+            if (states[s] != terminal)
             {
 
                 std::copy_if(states.begin(), states.end(), std::back_inserter(transition), Transition(actions, stateMapping(states[s])));
@@ -177,17 +177,17 @@ void ValueIteration::runAlgorithm()
 int ValueIteration::getStateIndex(const std::string &s, const std::string &action) const
 {
     std::vector<int> c = stateMapping(s);
-    if (action == "left")
+    if (action == actions[0])
     {
         c[0] -= 1;
         return coordinateMapping(c);
     }
-    if (action == "right")
+    if (action == actions[2])
     {
         c[0] += 1;
         return coordinateMapping(c);
     }
-    if (action == "up")
+    if (action == actions[3])
     {
         c[1] += 1;
         return coordinateMapping(c);
@@ -205,19 +205,19 @@ std::string ValueIteration::getAction(const std::string &s, const std::string &s
     std::vector<int> c_prime = stateMapping(s_prime);
     if ((c[0] - 1) == c_prime[0] && (c[1]) == c_prime[1])
     {
-        return "left";
+        return actions[0];
     }
     if ((c[0] + 1) == c_prime[0] && (c[1]) == c_prime[1])
     {
-        return "right";
+        return actions[1];
     }
     if ((c[1] + 1) == c_prime[1] && (c[0]) == c_prime[0])
     {
-        return "up";
+        return actions[2];
     }
     else
     {
-        return "down";
+        return actions[3];
     }
 }
 
@@ -258,9 +258,9 @@ void ValueIteration::computePolicy(const std::string &start)
             values.push_back(state_optimal_value[t]);
         }
 
-        if (std::find(transition.begin(), transition.end(), "s3") != transition.end())
+        if (std::find(transition.begin(), transition.end(), terminal) != transition.end())
         {
-            optimal_policy.push_back(getAction(state, "s3"));
+            optimal_policy.push_back(getAction(state, terminal));
             terminated = true;
         }
         else
@@ -305,7 +305,7 @@ std::ostream &PLLKIA010::operator<<(std::ostream &os, const ValueIteration &v)
 {
     ValueIteration value_iteration = v;
     value_iteration.runAlgorithm();
-    value_iteration.computePolicy("s4");
-    value_iteration.writeResults(os, "s4");
+    value_iteration.computePolicy(value_iteration.start);
+    value_iteration.writeResults(os, value_iteration.start);
     return os;
 }
