@@ -172,6 +172,7 @@ void ValueIteration::runAlgorithm()
             }
         }
     } while (!testConvergence());
+    iterations = k;
 }
 
 int ValueIteration::getStateIndex(const std::string &s, const std::string &action) const
@@ -243,7 +244,7 @@ void ValueIteration::computePolicy(const std::string &start)
     std::vector<float> values;
 
     std::unordered_map<std::string, float> state_optimal_value;
-    for (int o = 0; o < int(optimal_values.size()); ++o)
+    for (int o = 0; o < int(states.size()); ++o)
     {
         state_optimal_value.insert({states[o], optimal_values[optimal_values.size() - 1][o]});
     }
@@ -276,6 +277,9 @@ void ValueIteration::computePolicy(const std::string &start)
 
 void ValueIteration::writeResults(std::ostream &os, const std::string &start)
 {
+    os << "Question 1" << std::endl;
+    os << "----------" << std::endl;
+    os << "Iterations:  " << iterations << std::endl <<  std::endl;
 
     os << "Optimal Values:  \n";
     for (int i = 0; i < int(states.size()); ++i)
@@ -284,6 +288,8 @@ void ValueIteration::writeResults(std::ostream &os, const std::string &start)
     }
     std::cout << std::endl;
 
+    os << "Question 2" << std::endl;
+    os << "----------" << std::endl;
     os << "Optimal Policy (Actions): ";
     for (int i = 0; i < int(optimal_policy.size()); ++i)
     {
@@ -302,7 +308,9 @@ void ValueIteration::writeResults(std::ostream &os, const std::string &start)
 }
 
 std::ostream &PLLKIA010::operator<<(std::ostream &os, const ValueIteration &v)
-{
+{   
+    os << "ML Assignment 6: Value Iteration" << std::endl << "================================" << std::endl;
+    os << "Kialan Pillay: PLLKIA010" << std::endl << "================================" << std::endl << std::endl;
     ValueIteration value_iteration = v;
     value_iteration.runAlgorithm();
     value_iteration.computePolicy(value_iteration.start);

@@ -29,6 +29,7 @@ namespace PLLKIA010
         float discount;
         std::string start;
         std::string terminal;
+        int iterations;
     };
     std::ostream &operator<<(std::ostream &os, const ValueIteration &v);
 } // namespace PLLKIA010
