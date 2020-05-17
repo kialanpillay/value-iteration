@@ -11,7 +11,7 @@ using namespace PLLKIA010;
 ValueIteration::ValueIteration(void){};
 
 ValueIteration::ValueIteration(const std::vector<std::string> &s, const std::vector<std::string> &a,
-                               const std::unordered_map<std::string, int> &rf, const float &d, const std::string &t) : states(s), actions(a), reward_function(rf), discount(d), terminal(t) {}
+                               const std::unordered_map<std::string, int> &rf, const float &d, const std::string &st, const std::string &t) : states(s), actions(a), reward_function(rf), discount(d), start(st), terminal(t) {}
 
 std::vector<int> stateMapping(const std::string &s) //Helper Function - s -> (x,y)
 {
@@ -305,7 +305,7 @@ std::ostream &PLLKIA010::operator<<(std::ostream &os, const ValueIteration &v)
 {
     ValueIteration value_iteration = v;
     value_iteration.runAlgorithm();
-    value_iteration.computePolicy("s1");
-    value_iteration.writeResults(os, "s1");
+    value_iteration.computePolicy("s4");
+    value_iteration.writeResults(os, "s4");
     return os;
 }
