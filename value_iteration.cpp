@@ -305,7 +305,8 @@ void ValueIteration::writeResults(std::ostream &os)
         state = states[getStateIndex(state, optimal_policy[i])];
         os << state << " ";
     }
-    os << std::endl << std::endl;
+    os << std::endl
+       << std::endl;
 
     os << "Question 3" << std::endl;
     os << "----------" << std::endl;
@@ -333,8 +334,25 @@ void ValueIteration::writeResults(std::ostream &os)
             os << states[i] << " - " << optimal_values[optimal_values.size() - 1][i] << "\n";
         }
         os << std::endl;
+        os << "No Optimal Policy Change" << std::endl << std::endl;
+        os << "Optimal Policy (Actions): ";
+        for (int i = 0; i < int(optimal_policy.size()); ++i)
+        {
+            os << optimal_policy[i] << " ";
+        }
+        os << std::endl;
+
+        std::string state = start;
+        os << "Optimal Policy (States): ";
+        os << state << " ";
+        for (int i = 0; i < int(optimal_policy.size()); ++i)
+        {
+            state = states[getStateIndex(state, optimal_policy[i])];
+            os << state << " ";
+        }
     }
-    else{
+    else
+    {
         os << "Optimal Policy Change Guaranteed";
     }
 }
