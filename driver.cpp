@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
     string terminal = "s3";
 
     ValueIteration module(states, actions, reward_function, discount, start, terminal);
-    cout << module;
+    out << module;
     out.close();
     return 0;
 }
