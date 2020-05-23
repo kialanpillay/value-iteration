@@ -248,6 +248,9 @@ void ValueIteration::computePolicy()
     }
     while (!terminated)
     {
+        if(start==terminal){
+            break;
+        }
         transition.clear();
         values.clear();
         std::copy_if(states.begin(), states.end(), std::back_inserter(transition), Transition(actions, mapState(state)));
