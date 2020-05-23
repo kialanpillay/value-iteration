@@ -25,10 +25,10 @@ This file is the actual implementation of the methods declared in the ```value_i
 **mapState/mapCoordinates**: This methods do not belong to the class, and are helper methods defined in the ```.cpp``` file that convert a state to its coordinates in the grid-world environment, and the reverese operation, respectively.
 
 
-**Transition**: This is a functor that detirmines whether a transition between states in the environment is valid, given the coordinates of the two states, and the set of actions. The functor is applied to each element in the state space to obtain a ```vector``` of transitions. 
+**Transition**: This is a functor that determines whether a transition between states in the environment is valid, given the coordinates of the two states, and the set of actions. The functor is applied to each element in the state space to obtain a ```vector``` of transitions. 
 
 
-**computePolicy**: This method detirmines the argmax of the Bellman Optimality equation, once the algorithm has converged and the optimal values for each state are computed. This returns a function that maps from the state space to the action space, and gives the optimal policy that the agent should follow to maximise the reward obtained when it reaches the goal state.
+**computePolicy**: This method determines the argmax of the Bellman Optimality equation, once the algorithm has converged and the optimal values for each state are computed. This returns a the mappingfrom the state space to the action space, giving the optimal policy that the agent should follow to maximise the reward obtained when it reaches the goal state.
 
 
 **getAction**: This method returns the action (```string```) executed by the agent, given the previous state  and state that it currently occupies.
