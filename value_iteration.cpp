@@ -236,6 +236,7 @@ void ValueIteration::computePolicy()
 {
     optimal_policy.clear();
     std::string state = start;
+    std::vector<std::string> optimal_states = {start};
     int p = 0;
     bool terminated = false;
     std::vector<std::string> transition;
@@ -246,7 +247,6 @@ void ValueIteration::computePolicy()
     {
         state_optimal_value.insert({states[o], optimal_values[optimal_values.size() - 1][o]});
     }
-
     while (!terminated)
     {
         transition.clear();
@@ -257,18 +257,23 @@ void ValueIteration::computePolicy()
             values.push_back(state_optimal_value[t]);
         }
 
-        if (std::find(transition.begin(), transition.end(), terminal) != transition.end())
+        auto it = std::find(values.begin(), values.end(), *std::max_element(values.begin(), values.end()));
+        int index = std::distance(values.begin(), it);
+
+        std::string action = getAction(state, transition[index]);
+        std::string s = states[getStateIndex(state, action)];
+
+        if(std::find(optimal_states.begin(), optimal_states.end(), s) == optimal_states.end()){
+            optimal_policy.push_back(action);
+        }
+        else if (std::find(transition.begin(), transition.end(), terminal) != transition.end())
         {
             optimal_policy.push_back(getAction(state, terminal));
             terminated = true;
         }
-        else
-        {
-            auto it = std::find(values.begin(), values.end(), *std::max_element(values.begin(), values.end()));
-            int index = std::distance(values.begin(), it);
-            optimal_policy.push_back(getAction(state, transition[index]));
-        }
+
         state = states[getStateIndex(state, optimal_policy[p])];
+        optimal_states.push_back(state);
         p++;
     }
 }
@@ -311,7 +316,7 @@ void ValueIteration::writeResults(std::ostream &os)
     os << "Question 3" << std::endl;
     os << "----------" << std::endl;
 
-    reward_function = {{"s2s3", 100}, {"s6s3", 100}};
+    reward_function = {{"s2s3", 100}, {"s6s3", 200}};
     runAlgorithm();
     computePolicy();
 
@@ -321,6 +326,7 @@ void ValueIteration::writeResults(std::ostream &os)
         if (cache[i] != optimal_policy[i])
         {
             policy_change = true;
+            break;
         }
     }
 
@@ -328,13 +334,15 @@ void ValueIteration::writeResults(std::ostream &os)
     {
 
         os << "Reward Function Change: (1,1) -> (1,2); R = 100  \n";
+        os << "Reward Function Change: (2,0) -> (2,1); R = 200  \n";
         os << "Updated Optimal Values:  \n";
         for (int i = 0; i < int(states.size()); ++i)
         {
             os << states[i] << " - " << optimal_values[optimal_values.size() - 1][i] << "\n";
         }
         os << std::endl;
-        os << "No Optimal Policy Change" << std::endl << std::endl;
+        os << "No Optimal Policy Change" << std::endl
+           << std::endl;
         os << "Optimal Policy (Actions): ";
         for (int i = 0; i < int(optimal_policy.size()); ++i)
         {
