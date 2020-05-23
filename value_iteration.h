@@ -24,7 +24,7 @@ namespace PLLKIA010
         std::vector<std::string> actions;
         std::unordered_map<std::string, int> reward_function;
         std::vector<std::vector<float>> optimal_values;
-        std::vector<std::string> optimal_policy;
+        std::unordered_map<std::string, std::string> optimal_policy;
         float discount;
         std::string start;
         std::string terminal;
