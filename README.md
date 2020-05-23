@@ -28,13 +28,13 @@ This file is the actual implementation of the methods declared in the ```value_i
 **Transition**: This is a functor that determines whether a transition between states in the environment is valid, given the coordinates of the two states, and the set of actions. The functor is applied to each element in the state space to obtain a ```vector``` of transitions. 
 
 
-**computePolicy**: This method determines the argmax of the Bellman Optimality equation, once the algorithm has converged and the optimal values for each state are computed. This returns a the mappingfrom the state space to the action space, giving the optimal policy that the agent should follow to maximise the reward obtained when it reaches the goal state.
+**computePolicy**: This method determines the argmax of the Bellman Optimality equation, once the algorithm has converged and the optimal values for each state are computed. The optimal mapping returns from the state space to the action space for each space is computed, giving the optimal policy that the agent should follow to maximise the reward obtained when it reaches the goal state from any inital state.
 
 
-**getAction**: This method returns the action (```string```) executed by the agent, given the previous state  and state that it currently occupies.
+**getAction**: This method returns the action (```string```) executed by the agent, given the previous state and state that it currently occupies.
 
 
-**getStateIndex**: This method returns the index of the state in the state space ```vector```, given a currently occupied state and action executed by the agent. 
+**getStateIndex**: This method returns the index of the next state in the state space ```vector```, given a currently occupied state and action executed by the agent. 
 
 
 **writeResults**: This method writes the results of the algorithm: the total iterations and the actions and states comprising the optimal policy to the supplied ```ostream```. It also conducts an experiment to ascertain whether modifying the reward function produces different optimal values for each state after computation, but leaves the optimal policy intact. 
