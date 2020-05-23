@@ -265,7 +265,7 @@ void ValueIteration::computePolicy()
         std::string action = getAction(state, transition[index]);
         std::string s_prime = states[getStateIndex(state, action)];
         float v = state_optimal_value[s_prime];
-        if(v >= state_optimal_value[state]){
+        if(v > state_optimal_value[state]){
             optimal_policy.push_back(action);
         }
         else if (std::find(transition.begin(), transition.end(), terminal) != transition.end())
