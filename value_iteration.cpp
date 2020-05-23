@@ -236,7 +236,6 @@ void ValueIteration::computePolicy()
 {
     optimal_policy.clear();
     std::string state = start;
-    std::vector<std::string> optimal_states = {start};
     int p = 0;
     bool terminated = false;
     std::vector<std::string> transition;
@@ -261,9 +260,9 @@ void ValueIteration::computePolicy()
         int index = std::distance(values.begin(), it);
 
         std::string action = getAction(state, transition[index]);
-        std::string s = states[getStateIndex(state, action)];
-
-        if(std::find(optimal_states.begin(), optimal_states.end(), s) == optimal_states.end()){
+        std::string s_prime = states[getStateIndex(state, action)];
+        float v = state_optimal_value[s_prime];
+        if(v >= state_optimal_value[state]){
             optimal_policy.push_back(action);
         }
         else if (std::find(transition.begin(), transition.end(), terminal) != transition.end())
@@ -273,7 +272,6 @@ void ValueIteration::computePolicy()
         }
 
         state = states[getStateIndex(state, optimal_policy[p])];
-        optimal_states.push_back(state);
         p++;
     }
 }
