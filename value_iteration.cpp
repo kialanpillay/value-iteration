@@ -275,7 +275,6 @@ void ValueIteration::computePolicy()
             auto it = std::find(bellman_optimality.begin(), bellman_optimality.end(), *std::max_element(bellman_optimality.begin(), bellman_optimality.end()));
             int index = std::distance(bellman_optimality.begin(), it);
             std::string action = getAction(states[s], transition[index]);
-            //optimal_policy.push_back(action);
             optimal_policy.insert({states[s], action});
         }
         else
