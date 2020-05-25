@@ -43,6 +43,10 @@ This file is the actual implementation of the methods declared in the ```value_i
 
 **getOptimalValues**: Accessor method for the ```vector``` that contains the optimal values of the states calculated by the algorithm (final element of the optimal_values  ```vector```).
 
+**getIterations**: Accessor method for that returns the number of iterations taken to converge.
+
+Note that the above accessors are implemented for the user's convenience, and are not used by the program, which instead writes all the results to an ```ostream``` to avoid users needing to manually call accessor methods and view the results.
+
 ## driver.cpp
 
 This file contains the main method, and provides an entry point into the program. It imports the ```value_iteration.h``` file in order to provide the requisite reinforcement learning functionality. The main method has a ```ValueIteration``` object, and uses the overloaded operator to write the results to the supplied ```ostream``` object.
