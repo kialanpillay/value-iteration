@@ -378,6 +378,14 @@ void ValueIteration::writeResults(std::ostream &os)
     }
 }
 
+std::vector<float> ValueIteration::getOptimalValues() const{
+    return optimal_values[optimal_values.size() - 1];
+}
+
+std::unordered_map<std::string, std::string> ValueIteration::getOptimalPolicy() const {
+    return optimal_policy;
+}
+
 std::ostream &PLLKIA010::operator<<(std::ostream &os, const ValueIteration &v)
 {
     os << "ML Assignment 6: Value Iteration" << std::endl

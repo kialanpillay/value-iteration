@@ -18,6 +18,8 @@ namespace PLLKIA010
         bool testConvergence(void) const;
         int getStateIndex(const std::string &s, const std::string &action) const;
         std::string getAction(const std::string &s, const std::string &s_prime) const;
+        std::vector<float> getOptimalValues() const;
+        std::unordered_map<std::string, std::string> getOptimalPolicy() const;
 
     private:
         std::vector<std::string> states;

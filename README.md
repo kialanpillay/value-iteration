@@ -39,6 +39,10 @@ This file is the actual implementation of the methods declared in the ```value_i
 
 **writeResults**: This method writes the results of the algorithm: the total iterations and the actions and states comprising the optimal policy to the supplied ```ostream```. It also conducts an experiment to ascertain whether modifying the reward function produces different optimal values for each state after computation, but leaves the optimal policy intact. 
 
+**getOptimalPolicy**: Accessor method for the ```unordered_map``` that contains the computed optimal policy.
+
+**getOptimalValues**: Accessor method for the ```vector``` that contains the optimal values of the states calculated by the algorithm (final element of the optimal_values  ```vector```).
+
 ## driver.cpp
 
 This file contains the main method, and provides an entry point into the program. It imports the ```value_iteration.h``` file in order to provide the requisite reinforcement learning functionality. The main method has a ```ValueIteration``` object, and uses the overloaded operator to write the results to the supplied ```ostream``` object.
