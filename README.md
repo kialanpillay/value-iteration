@@ -9,7 +9,7 @@ The purpose of the Makefile is to automatically compile and link the C++ source 
 
 ## value_iteration.h
 
-This is a header file that contains the ```ValueIteration``` Class declaration. This class contains several methods and data member variables necessary for the implementation of the Value Iteration algorithm. ```vector``` variables are used to hold key data pertaining to the states and actions possible in the environment and the optimal values and policies that are computed at each iteration of the algorithm. An ```unordered_map``` stores the reward function value, indexed by the transition between states. The start and terminal state are stored in ```string``` members. Integral variables that track the total number of iterations before convergence, and the discount factor utilised in the algorithm.
+This is a header file that contains the ```ValueIteration``` Class declaration. This class contains several methods and data member variables necessary for the implementation of the Value Iteration algorithm. ```vector``` variables are used to hold key data pertaining to the states and actions possible in the environment and the optimal values that are computed at each iteration of the algorithm. An ```unordered_map``` stores the reward function value indexed by the transition between states, as well as another to store the optimal policy computed from the optimal values. The start and terminal state are stored in ```string``` members. Integral variables that track the total number of iterations before convergence, and the discount factor utilised in the algorithm.
 
 
 ## value_iteration.cpp
@@ -49,5 +49,5 @@ Note that the above accessors are implemented for the user's convenience, and ar
 
 ## driver.cpp
 
-This file contains the main method, and provides an entry point into the program. It imports the ```value_iteration.h``` file in order to provide the requisite reinforcement learning functionality. The main method has a ```ValueIteration``` object, and uses the overloaded operator to write the results to the supplied ```ostream``` object.
+This file contains the main method, and provides an entry point into the program. It imports the ```value_iteration.h``` file in order to provide the requisite reinforcement learning functionality. The main method has a ```ValueIteration``` object, which is instantiated by the local variables created in the main method. The start, terminal, discount factor, actions, and reward function values can be easily changed to simulate different agent behavior. The overloaded operator is ued to write the results to the supplied ```ostream``` object.
 
